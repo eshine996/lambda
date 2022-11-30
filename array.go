@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// make Array from source(TIn[] type)
+//LambdaArray make Array from source(TIn[] type)
 // source support array or slice type
 func LambdaArray(source interface{}) Array {
 	t := reflect.TypeOf(source)
@@ -33,6 +33,8 @@ type Array interface {
 	// array filter
 	// eg: arr.Filter(func(ele int) bool{ return ele>10})
 	Filter(express interface{}) Array
+
+	SplitField(express interface{}) Array
 
 	// sort by quick
 	// eg
@@ -467,6 +469,27 @@ func (p *_array) Filter(express interface{}) Array {
 		if trans[0].Interface().(bool) {
 			ret = reflect.Append(ret, params[0])
 		}
+	}
+	return innerLambdaArray(ret)
+}
+
+func (p *_array) SplitField(express interface{}) Array {
+	in := []reflect.Type{p.elementType}
+	ft := reflect.TypeOf(express)
+	ot := reflect.TypeOf(true)
+	checkExpress(ft, in, []reflect.Type{ot})
+
+	funcValue := reflect.ValueOf(express)
+	funcType := reflect.TypeOf(express)
+	length := p.Len()
+
+	ret := reflect.MakeSlice(reflect.SliceOf(funcType.Out(0)), 0, 0)
+	params := []reflect.Value{reflect.ValueOf(0)}
+
+	for i := 0; i < length; i++ {
+		params[0] = p.value.Index(i)
+		trans := funcValue.Call(params)
+		ret = reflect.Append(ret, trans[0])
 	}
 	return innerLambdaArray(ret)
 }
