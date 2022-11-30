@@ -474,10 +474,10 @@ func (p *_array) Filter(express interface{}) Array {
 }
 
 func (p *_array) SplitField(express interface{}) Array {
-	in := []reflect.Type{p.elementType}
-	ft := reflect.TypeOf(express)
-	ot := reflect.TypeOf(true)
-	checkExpress(ft, in, []reflect.Type{ot})
+	//in := []reflect.Type{p.elementType}
+	//ft := reflect.TypeOf(express)
+	//ot := reflect.TypeOf(true)
+	//checkExpress(ft, in, []reflect.Type{ot})
 
 	funcValue := reflect.ValueOf(express)
 	funcType := reflect.TypeOf(express)
